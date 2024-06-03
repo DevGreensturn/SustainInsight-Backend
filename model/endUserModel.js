@@ -12,7 +12,7 @@ const endUserSchema = new mongoose.Schema({
   },
   firstName: {
     type: String,
-    required: false
+    required: false 
   },
   lastName: {
     type: String,
