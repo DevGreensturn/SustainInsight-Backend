@@ -202,4 +202,10 @@ const googleLogin = async(req,res)=>{
     return res.status(500).send({ sessionExist: false,status: false, message: "Internal server error",error:error })
   }
 }
-module.exports = {createUser,updateUser,userLogin,googleLogin};
+const testAPI = async(req,res)=>{
+  return res.status(200).send({
+    message:"API is working fine",
+    status:true
+  })
+}
+module.exports = {createUser,updateUser,userLogin,googleLogin,testAPI};

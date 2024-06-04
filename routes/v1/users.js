@@ -4,10 +4,11 @@ const auth = require('../../middleware/authHandler');
 const user = require('../../controller/userController');
 const userRoles = require('../../controller/userroles');
 
-router.post('/',user.createUser)
+router.post('/',user.createUser);
 router.post('/login',user.userLogin); 
 router.put('/:id',auth.authenticateToken,user.updateUser);
-router.post('/social/login',user.googleLogin) 
+router.post('/social/login',user.googleLogin);
+router.get('/',user.testAPI); 
 
 router.get("/roles",auth.authenticateToken,  userRoles.getUsersRoles);
 router.get("/roles/:id",auth.authenticateToken,  userRoles.userRoleByid);
