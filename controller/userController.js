@@ -43,10 +43,10 @@ const createUser = async (req, res) => {
   }
 }
 const userLogin = async (req, res) => {
-  const { email, password,loginType } = req.body;
+  const { email, password, loginType } = req.body;
   try {
     const user = await allUsers.findOne({
-      "email": { $regex: email, $options: "i" },
+      email: { $regex: email, $options: "i" },
     });
 
     if (!user) {
@@ -56,58 +56,60 @@ const userLogin = async (req, res) => {
         sessionExist: false,
       });
     }
-    
-    const passwordMatch = await bcrypt.compare(
-      password,
-      user.password
-    );
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      
-       return res.status(400).json({
-          message: "Invalid Credentials.",
-          status: false,
-          sessionExist: false,
-          loginAttempt: user.loginAttempt,
-        });
-    }
-    if(user.status!="ACTIVE"){
       return res.status(400).json({
-        message:
-          "Please contact to support. Your account is not activate",
+        message: "Invalid Credentials.",
+        status: false,
+        sessionExist: false,
+        loginAttempt: user.loginAttempt,
+      });
+    }
+
+    if (user.status !== "ACTIVE") {
+      return res.status(400).json({
+        message: "Please contact support. Your account is not active.",
         status: false,
         sessionExist: false,
       });
     }
-    let dataExist = {
-      "_id":user._id,
-      "email":email,
-      "loginType":loginType,
-      "timestamp":Date.now()
-    };
-    const jwtPayload = dataExist;
-    console.log(process.env.JWT_EXPIRY);
-    const jwtDate = { expiresIn: process.env.JWT_EXPIRY };
 
-    dataExist.token = jwt.sign(jwtPayload, process.env.jwt_secretKey, jwtDate);
+    const dataExist = {
+      _id: user._id,
+      email: user.email,
+      loginType: loginType,
+      timestamp: Date.now(),
+    };
+
+    const jwtPayload = dataExist;
+    const jwtDate = { expiresIn: process.env.JWT_EXPIRY };
+    const token = jwt.sign(jwtPayload, process.env.JWT_SECRET_KEY, jwtDate);
+
+    const updatedUser = await allUsers.findByIdAndUpdate(
+      user._id,
+      { $set: { token: token } },
+      { new: true }
+    );
 
     return res.status(200).json({
       message: "Logged In!",
       status: true,
       sessionExist: true,
-      data: user,
-      token: dataExist.token
+      data: updatedUser
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({
       message: "Internal Server Error",
       status: false,
       sessionExist: false,
-      error: error,
+      error: error.message,
     });
   }
 };
+
 const updateUser = async (req, res) => {
   try {
     const rounds = 10;

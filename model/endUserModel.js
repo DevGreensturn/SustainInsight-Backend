@@ -51,6 +51,9 @@ const endUserSchema = new mongoose.Schema({
     default:"Email",
     required: false
   },
+  token:{
+    type:String
+  }
 },
 {timestamps:true}
 );
