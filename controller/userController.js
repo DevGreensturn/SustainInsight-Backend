@@ -204,10 +204,36 @@ const googleLogin = async(req,res)=>{
     return res.status(500).send({ sessionExist: false,status: false, message: "Internal server error",error:error })
   }
 }
+const getUserData = async(req,res)=>{
+  const {id} = req.params
+  // const authToken = req.headers.authorization;
+  // const decoded = jwt.decode(authToken);
+  try{
+    let allData;
+    if(id){
+        allData = await allUsers.findById(id).populate("roleId").lean(); 
+    }else{
+       allData = await allUsers.find().populate("roleId").lean(); 
+    }
+  return res.status(200).send({
+    status: true,
+    message: "Get users data",
+    response: allData
+  }); 
+  }catch(error){
+    console.error(error);
+    return res.status().send({
+      status:false,
+      message:"Internal Server Error",
+      error:error
+    })
+  }
+  
+}
 const testAPI = async(req,res)=>{
   return res.status(200).send({
     message:"API is working fine",
     status:true
   })
 }
-module.exports = {createUser,updateUser,userLogin,googleLogin,testAPI};
+module.exports = {createUser,updateUser,userLogin,googleLogin,testAPI,getUserData};
