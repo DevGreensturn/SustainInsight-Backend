@@ -1,6 +1,7 @@
 
 const supplier = require("../model/supplierModel");
 const roleSchema = require("../model/UserRolesModelSchema");
+projectModel = require("../model/projectModel");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
@@ -22,13 +23,15 @@ const createSupplier = async (req, res) => {
   }
 }
 const getSupplier = async (req, res) => {
-    const {id,projectId} = req.params;
+    const {id} = req.params;
+    const {projectId} = req.query;
     try {
         let allData;
         if(id){
-            allData = await supplier.find().populate("projectId packageId").lean(); 
+            allData = await supplier.findById(id).populate("projectId packageId").lean(); 
         }else{
            allData = await supplier.find({projectId:projectId}).populate("projectId packageId").lean(); 
+           console.log(allData);
         }
       return res.status(200).send({
         status: true,
