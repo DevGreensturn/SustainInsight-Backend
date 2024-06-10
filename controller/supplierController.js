@@ -15,8 +15,8 @@ const createSupplier = async (req, res) => {
     }
     req.body.roleId = roleData._id;
     const newUser = new supplier(req.body);
-    await newUser.save();
-    res.status(201).send({ message: "Supplier registered", status: true });
+    const data = await newUser.save();
+    res.status(201).send({ message: "Supplier registered", status: true ,data:data});
   } catch (error) {
     console.log("error====",error)
     res.status(500).send({ message: error.message, status: false ,error});
