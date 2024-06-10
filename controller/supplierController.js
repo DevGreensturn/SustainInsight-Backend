@@ -12,7 +12,7 @@ const createSupplier = async (req, res) => {
     if(!roleData) {
       return res.status(404).send({ message: "User role not found!", status: false });
     }
-
+    req.body.roleId = roleData._id;
     const newUser = new supplier(req.body);
     await newUser.save();
     res.status(201).send({ message: "Supplier registered", status: true });
