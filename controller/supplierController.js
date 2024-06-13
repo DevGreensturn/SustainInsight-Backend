@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
 const createSupplier = async (req, res) => {
-    const {loginType} = req.body;
+    let {loginType="SUPPLIER"} = req.body;
     try {
     let roleData = await roleSchema.findOne({"roleName": loginType.trim()})
     
@@ -29,10 +29,14 @@ const getSupplier = async (req, res) => {
         let allData;
         if(id){
             allData = await supplier.findById(id).populate("projectId packageId").lean(); 
-        }else{
+        }else if(projectId){
            allData = await supplier.find({projectId:projectId}).populate("projectId packageId").lean(); 
            console.log(allData);
         }
+        else{
+            allData = await supplier.find().populate("projectId packageId").lean(); 
+            console.log(allData);
+         }
       return res.status(200).send({
         status: true,
         message: "Get Supplier data",
