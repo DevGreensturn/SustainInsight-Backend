@@ -30,11 +30,11 @@ const getSupplier = async (req, res) => {
         if(id){
             allData = await supplier.findById(id).populate("projectId packageId").lean(); 
         }else if(projectId){
-           allData = await supplier.find({projectId:projectId}).populate("projectId packageId").lean(); 
+           allData = await supplier.find({projectId:projectId,safeDelete:false}).populate("projectId packageId").lean(); 
            console.log(allData);
         }
         else{
-            allData = await supplier.find().populate("projectId packageId").lean(); 
+            allData = await supplier.find({safeDelete:false}).populate("projectId packageId").lean(); 
             console.log(allData);
          }
       return res.status(200).send({
@@ -69,7 +69,7 @@ const updateSupplier = async(req,res)=>{
 const deleteSupplier = async(req,res)=>{
     const {id} = req.params;
     try{
-        const data = await supplier.findByIdAndDelete(id);
+        const data = await supplier.findByIdAndUpdate(id, { $set: { safeDelete: true } }, {new:true})
         if(data){
             return res.status(200).send({
                 status: true,
