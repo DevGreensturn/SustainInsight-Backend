@@ -1,5 +1,5 @@
-const CountryCode = require("../../model/countryCodeModel");
-const message = require('../../helpers/messages');
+const CountryCode = require("../model/countryCodeModel");
+
 
 
 let CountryCodeList = {};
@@ -48,7 +48,7 @@ const countries = async (req, res) => {
     } catch (error) {
         // logger.error(JSON.stringify(error));
         console.log(error);
-        return res.status(500).send({ message: message.ServerError, success: 0 });
+        return res.status(500).send({ message: "internal server", success: 0 });
     }
 };
 
