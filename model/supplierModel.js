@@ -42,6 +42,7 @@ const supplierSchema = new mongoose.Schema({
   },
   safeDelete: {
     type:Boolean,
+    default:false,
     required: false
   },
 },
