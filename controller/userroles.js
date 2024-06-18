@@ -32,26 +32,16 @@ const createUserRoles = async (req, res) => {
 };
 
 const getUsersRoles = async (req, res) => {
-  let { page, limit } = req.query;
-  if (!page) page = 1;
-  if (!limit) limit = 10;
-  const skip = (page - 1) * 10;
+
+
   try {
     const allData = await UserRolesModel.find().populate({
       path: 'permissions.moduleId', options: { strictPopulate: false }
-    }).skip(skip)
-    .limit(limit);
-    let allUsersCount = (await UserRolesModel.find()).length;
-    const remaingingCount =( allUsersCount - limit) * page;
-    const totalPages = Math.ceil(allUsersCount / limit);
-    
+    })
+
     return res.status(200).send({
       status: true,
       message: "Roles Data",
-      remaingingCount:remaingingCount,
-      totalPages:totalPages,
-      page: page,
-      limit: limit,
       response: allData
     });
   } catch (error) {
