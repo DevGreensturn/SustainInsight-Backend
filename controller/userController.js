@@ -213,7 +213,7 @@ const getUserData = async(req,res)=>{
     if(id){
         allData = await allUsers.findById(id).populate("roleId").lean(); 
     }else{
-       allData = await allUsers.find().populate("roleId").lean(); 
+       allData = await allUsers.find().populate("roleId").lean().sort({createdAt:-1}); 
     }
   return res.status(200).send({
     status: true,

@@ -37,7 +37,7 @@ const getUsersRoles = async (req, res) => {
   try {
     const allData = await UserRolesModel.find().populate({
       path: 'permissions.moduleId', options: { strictPopulate: false }
-    })
+    }).sort({createdAt:-1})
 
     return res.status(200).send({
       status: true,

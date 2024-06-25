@@ -30,11 +30,11 @@ const getSupplier = async (req, res) => {
         if(id){
             allData = await supplier.findById(id).populate("projectId packageId").lean(); 
         }else if(projectId){
-           allData = await supplier.find({projectId:projectId,safeDelete:false}).populate("projectId packageId").lean(); 
+           allData = (await supplier.find({projectId:projectId,safeDelete:false}).populate("projectId packageId").lean()).sort({createdAt:-1}); 
            console.log(allData);
         }
         else{
-            allData = await supplier.find({safeDelete:false}).populate("projectId packageId").lean(); 
+            allData = await supplier.find({safeDelete:false}).populate("projectId packageId").lean().sort({createdAt:-1}); 
             console.log(allData);
          }
       return res.status(200).send({
