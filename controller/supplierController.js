@@ -30,7 +30,7 @@ const getSupplier = async (req, res) => {
         if(id){
             allData = await supplier.findById(id).populate("projectId packageId").lean(); 
         }else if(projectId){
-           allData = (await supplier.find({projectId:projectId,safeDelete:false}).populate("projectId packageId").lean()).sort({createdAt:-1}); 
+           allData = (await supplier.find({projectId:projectId,safeDelete:false}).populate("projectId packageId").lean().sort({createdAt:-1})); 
            console.log(allData);
         }
         else{
@@ -43,7 +43,7 @@ const getSupplier = async (req, res) => {
         response: allData
       });
     } catch (error) {
-           
+           console.log(error);
       return res.status(500).send(error.message);
     }
 };
